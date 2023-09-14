@@ -4,46 +4,55 @@
 //
 //  Created by sahil singh on 20/08/23.
 //
-
 #import "CustomTabBarViewController.h"
 
-@interface CustomTabBarViewController ()
+@interface CustomTabBarViewController () <UITabBarControllerDelegate>
 
 @end
 
 @implementation CustomTabBarViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.delegate = self; // Set the delegate to self
+    [self updateTabBarItemsAppearance]; // Call this to initially set the appearance
+}
+
+- (void)updateTabBarItemsAppearance {
+    // Customize the title color for active and inactive states
+    NSDictionary *titleAttributesActive = @{ NSForegroundColorAttributeName : [UIColor blueColor] }; // Active color
+    NSDictionary *titleAttributesInactive = @{ NSForegroundColorAttributeName : [UIColor whiteColor] }; // Inactive color
     
-    // Loop through each tab bar item and customize their appearance
-    for (UITabBarItem *tabBarItem in self.tabBar.items) {
-        // Set the inactive icon image
-        UIImage *inactiveImage = [[UIImage imageNamed:@"inactiveIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [tabBarItem setImage:inactiveImage];
+    for (NSInteger i = 0; i < self.tabBar.items.count; i++) {
+        UITabBarItem *tabBarItem = self.tabBar.items[i];
+        UIImage *image;
         
-        // Set the active icon image
-        UIImage *activeImage = [[UIImage imageNamed:@"activeIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [tabBarItem setSelectedImage:activeImage];
+        if (i == 0) {
+            if (i == self.selectedIndex) {
+                image = [[UIImage imageNamed:@"home8-active"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            } else {
+                image = [[UIImage imageNamed:@"home8"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            }
+        } else if (i == 1) {
+            if (i == self.selectedIndex) {
+                image = [[UIImage imageNamed:@"map8-active"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            } else {
+                image = [[UIImage imageNamed:@"map8"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+            }
+        }
         
-        // Customize the title color for active and inactive states
-        NSDictionary *titleAttributesActive = @{ NSForegroundColorAttributeName : [UIColor blueColor] }; // Change to your desired active color
-        NSDictionary *titleAttributesInactive = @{ NSForegroundColorAttributeName : [UIColor grayColor] }; // Change to your desired inactive color
+        [tabBarItem setImage:image];
         
-        [tabBarItem setTitleTextAttributes:titleAttributesActive forState:UIControlStateSelected];
-        [tabBarItem setTitleTextAttributes:titleAttributesInactive forState:UIControlStateNormal];
+        if (i == self.selectedIndex) {
+            [tabBarItem setTitleTextAttributes:titleAttributesActive forState:UIControlStateNormal];
+        } else {
+            [tabBarItem setTitleTextAttributes:titleAttributesInactive forState:UIControlStateNormal];
+        }
     }
 }
 
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    [self updateTabBarItemsAppearance]; // Update appearance when selection changes
 }
-*/
 
 @end

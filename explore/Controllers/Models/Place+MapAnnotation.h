@@ -5,11 +5,12 @@
 //  Created by sahil singh on 19/08/23.
 //
 
-#import <Foundation/Foundation.h>
+#import "Place.h"
+#import <MapKit/MapKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Place_MapAnnotation : NSObject
+@interface Place (MapAnnotation)<MKAnnotation>
 
 @end
 

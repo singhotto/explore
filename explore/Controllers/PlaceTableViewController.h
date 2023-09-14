@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SinglePlaceViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PlaceTableViewController : UITableViewController
+@interface PlaceTableViewController : UITableViewController <DeleteViewControllerDelegate>
 
 @end
 

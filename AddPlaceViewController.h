@@ -6,10 +6,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <CoreData/CoreData.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AddPlaceViewController : UIView
+@interface AddPlaceViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *nameField;
+@property (weak, nonatomic) IBOutlet UITextView *descriptionField;
+@property (nonatomic, assign) CLLocationCoordinate2D coordinates;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (nonatomic, strong) NSData *imageData;
 
 @end
 

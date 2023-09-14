@@ -6,26 +6,52 @@
 //
 
 #import "ModifyPlaceViewController.h"
+#import "PlaceList.h"
 
 @interface ModifyPlaceViewController ()
-
+@property (nonatomic, strong) NSData *imageData;
 @end
 
 @implementation ModifyPlaceViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.nameField.text = self.place.placeName;
+    self.descField.text = self.place.placeDescription;
+    self.imageView.image = [UIImage imageWithContentsOfFile:self.place.imagePath];
+    [self addGesture];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)addGesture{
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+    [self.view addGestureRecognizer:tapGesture];
+    [tapGesture requireGestureRecognizerToFail:self.nameField.gestureRecognizers.firstObject];
+    [tapGesture requireGestureRecognizerToFail:self.descField.gestureRecognizers.firstObject];
 }
-*/
+
+- (void)dismissKeyboard {
+    [self.nameField resignFirstResponder];
+    [self.descField resignFirstResponder];
+}
+
+- (IBAction)updateImage:(id)sender {
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info{
+    UIImage *selectedImage = info[UIImagePickerControllerOriginalImage];
+    self.imageView.image = selectedImage;
+    self.imageData = UIImageJPEGRepresentation(selectedImage, 0.8);
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)update:(id)sender {
+    PlaceList *list = [[PlaceList alloc] init];
+    [list updatePlaceWithLocation:self.place.location newPlaceName:self.nameField.text newPlaceDescription:self.descField.text newImageData:self.imageData];
+    
+    [self performSegueWithIdentifier:@"placeUpdated" sender:self];
+}
 
 @end
